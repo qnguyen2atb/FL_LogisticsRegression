@@ -13,13 +13,13 @@ from sklearn.metrics import accuracy_score, classification_report
 
 print("---Reading input file to pandas Dataframe---")
 # dataset path
-path = '../data'
+path = 'data'
 file_name = 'churnsimulateddata.csv'
 file = os.path.join(path, file_name)
 print(file)
 # read data
 df = pd.read_csv(file)
-print('Shape of original data: {df.shape()}')
+print(f'Shape of original data: {df.shape()}')
 
 print("---Select features---")
 feature_names = ['Age','Tenure','PSYTE_Segment','Total_score','Trnx_count','num_products','mean_trnx_amt', 'Churn_risk']
@@ -76,8 +76,8 @@ class LR_Model():
         print(classification_report(y_test, y_pred, zero_division=0))
         #print('Intercept')
         #print(clf.intercept_)
-        print('Coefficients')
-        print(clf.coef_)
+        #print('Coefficients')
+        #print(clf.coef_)
         
         #testing_time = timeit.default_timer() - starttime
         #print("The testing time is :", testing_time)
@@ -97,13 +97,19 @@ model.fit(X_train, X_test, y_train, y_test)
 '''
 
 #Training Local model
+intercept_l = []
+coef_l = []
 for i in range(10):
     print(f'client No {i}')
     model = LR_Model()
     intercept, coef =  model.fit(X_train[i], X_test[i], y_train[i], y_test[i])
-    print(model.intercepts_)
-
+    intercept_l.append(intercept)
+    coef_l.append(coef)
+print(intercept_l)
+print(coef_l)
 
 #Aggregation
+#averaged the local weights
 
+#
 

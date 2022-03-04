@@ -14,7 +14,18 @@ This module implement the logistic regression from crash
 https://developer.ibm.com/articles/implementing-logistic-regression-from-scratch-in-python/
 
 
-##
+## Aggregation
+This module performs weighted averaging at the server side to generte the global model
+
+## global_prediction
+This module performs prediction at the local clients using the global model
+
+## local_train_predict
+This module performs training and predicting at the local clients 
+
+
+
+
 
 
 

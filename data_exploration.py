@@ -23,7 +23,7 @@ file_name = 'churnsimulateddata.csv'
 file = os.path.join(path, file_name)
 
 
-class Data_Explo():
+class Data_Exploration():
     def __init__(self, path, balance=False):
         self.balance = balance
         if self.balance:

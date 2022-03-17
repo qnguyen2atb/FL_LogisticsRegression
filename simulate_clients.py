@@ -50,7 +50,7 @@ def data_balance(_X_train, _y_train, algo='downsampling'):
         low = X[X.Churn_risk==1]
         high = X[X.Churn_risk==0]
 
-        
+
         X.Churn_risk.value_counts()
         
         try:
@@ -76,18 +76,19 @@ def data_balance(_X_train, _y_train, algo='downsampling'):
 
 
 class simultedClients():
-    def __init__(self, data, n_clients, split_type='geo') -> None:
+    def __init__(self, data, n_clients, split_feature= 'geo', split_type='geo') -> None:
         '''
         split_type: geo - split based on geoloction.
                      uniform - split randomly
         '''
         self.data = data
         self.n_clients = n_clients
+        self.split_feature = split_feature
         self.split_type = split_type
         print(f'---Simulate {self.n_clients} clients.')
 
     def createClients(self):
-        if self.split_type == 'geo':
+        if (self.split_type == 'geo') & (self.split_feature == 'geo'):
             print(f'Perform geo spliting to {self.n_clients} clients.')
             
             _data_v2 = self.data.sample(frac=1)
@@ -98,8 +99,19 @@ class simultedClients():
                 print(f'Client with PSYTE from {i} to {i+_step_size}')
                 y = _data_v2[(_data_v2.PSYTE_Segment >= i) & (_data_v2.PSYTE_Segment < i+_step_size)]
                 self.clients_data.append(y)     
-        elif self.split_type == 'uniform':
+        elif (self.split_type == 'uniform') & (self.split_feature == 'geo'):
             self.clients_data = np.array_split(self.data.sample(frac=1), self.n_clients)
+        elif self.split_feature == 'Age':
+            print(f'Perform geo spliting to {self.n_clients} clients based on Age.')
+            
+            _data_v2 = self.data.sample(frac=1)
+            self.clients_data = []
+            
+            _step_size = int(_data_v2.Age.max()/self.n_clients)
+            for i in range(0, _data_v2.Age.max(), _step_size):
+                print(f'Client with AGE from {i} to {i+_step_size}')
+                y = _data_v2[(_data_v2.Age >= i) & (_data_v2.Age < i+_step_size)]
+                self.clients_data.append(y)     
         else:
             raise NameError(' split type is not correctly defined')   
         print(f'Number of {np.size(self.clients_data)} clients. ')
@@ -116,7 +128,10 @@ class simultedClients():
         for i, client_data in enumerate(self.clients_data):
             print(f'client {i} with shape {np.shape(client_data)}')
             if np.shape(client_data)[0] > 100:
-                X = client_data.drop(columns=['Churn_risk','PSYTE_Segment'])
+                if self.split_feature == 'geo':
+                    X = client_data.drop(columns=['Churn_risk','PSYTE_Segment'])
+                elif self.split_feature == 'Age':
+                    X = client_data.drop(columns=['Churn_risk','Age'])
                 y = client_data['Churn_risk']
                 _X_train, _X_test, _y_train, _y_test = train_test_split(
                 X, y, test_size=0.2, random_state=42) 

@@ -38,6 +38,11 @@ def read_and_transform(binary_or_multiclass='multiclass'):
     #selected_df['Churn_risk'][selected_df['Churn_risk'] == 'High'] = '2'
 
 
+
+    # Data normalization
+    #X = normalize(X, norm='l2', axis=1, copy=True, return_norm=False)
+    #print(X)
+
     print(selected_df['Churn_risk'].value_counts())
 
     selected_df = selected_df.dropna()

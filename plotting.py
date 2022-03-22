@@ -14,7 +14,7 @@ def plot_f1(f1_local, f1_preunlearn_final, f1_global=None, figname='default'):
         global_T = list(f1_global.T)
         ax1.scatter(range(np.shape(local_T)[0]), global_T, color='blue', label='Pre-unlearned Global Model')
     ax1.set_xlabel('Clients #',fontsize=16)
-    ax1.set_ylabel('F1 Score',fontsize=16)
+    ax1.set_ylabel('F1 Score (%)',fontsize=16)
     ax1.legend(fontsize=16)
     ax1.set_ylim([60, 90])
     

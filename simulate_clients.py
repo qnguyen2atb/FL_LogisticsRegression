@@ -96,6 +96,7 @@ class simultedClients():
             for i in range(0, 60, _step_size):
                 print(f'Client with PSYTE from {i} to {i+_step_size}')
                 y = _data_v2[(_data_v2.PSYTE_Segment >= i) & (_data_v2.PSYTE_Segment < i+_step_size)]
+                y = y.sample(frac=1)
                 self.clients_data.append(y)     
         elif (self.split_type == 'uniform') & (self.split_feature == 'geo'):
             self.clients_data = np.array_split(self.data.sample(frac=1), self.n_clients)
@@ -142,6 +143,7 @@ class simultedClients():
                 # balance data
                 _X_train, _y_train = data_balance(_X_train, _y_train, algo='downsampling')
                 if balance_test_data:
+                    print('Balance testing data')
                     _X_test, _y_test = data_balance(_X_test, _y_test, algo='downsampling')
                 
                 X_train.append(_X_train)

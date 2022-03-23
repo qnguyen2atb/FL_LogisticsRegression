@@ -12,17 +12,18 @@ class LR_ScikitModel():
         clf.fit(X_train, y_train)
         model_params = clf.get_params() 
         training_time = timeit.default_timer() - starttime
-        starttime = timeit.default_timer()
+        #starttime = timeit.default_timer()
         y_pred=clf.predict(X_test)
         f1 = round(np.max(f1_score(y_test, y_pred, average=None))*100, 2)
         f1_ave = round(f1_score(y_test, y_pred, average='weighted')*100, 2)
         accuracy = round(accuracy_score(y_test, y_pred)*100,2)
         report = classification_report(y_test, y_pred, zero_division=0)
+        print(confusion_matrix(y_test, y_pred))
         print("The training time is :", training_time)
         print('Accuracy: ', accuracy)
         print('f1', f1)
-        testing_time = timeit.default_timer() - starttime
-        print("The testing time is :", testing_time)
+        #testing_time = timeit.default_timer() - starttime
+        #print("The testing time is :", testing_time)
         return clf.intercept_, clf.coef_, accuracy, f1, f1_ave, report
 
 
@@ -55,6 +56,7 @@ def multiclass_LogisticFunction(X, W, b):
 
         assert np.shape(X)[1] == np.shape(W)[1]   
         #assert np.shape(W)[0] == np.shape(b)[0]   
+
         pre_vals = np.dot(X, W.T) + b
         if np.size(b) > 2:            
             return softmax(pre_vals)

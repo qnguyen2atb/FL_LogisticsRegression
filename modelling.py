@@ -6,10 +6,12 @@ class LR_ScikitModel():
 
     def fit(self, X_train, X_test, y_train, y_test):
         print(f'fiting LR model with theses classes: {y_train.value_counts()}')
-        clf = LogisticRegression(multi_class='auto', max_iter=10000, n_jobs=-1, warm_start=True)
+        clf = LogisticRegression(multi_class='auto', max_iter=10000, n_jobs=-1, warm_start=False)
         starttime = timeit.default_timer()
         #Train the model using the training sets y_pred=clf.predict(X_test)        
         clf.fit(X_train, y_train)
+
+        self.predict_proba = clf.predict_proba(X_test) 
         model_params = clf.get_params() 
         training_time = timeit.default_timer() - starttime
         #starttime = timeit.default_timer()

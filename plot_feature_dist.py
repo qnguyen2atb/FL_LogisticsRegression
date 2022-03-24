@@ -1,6 +1,3 @@
-from pydoc import cli
-from re import X
-from unicodedata import east_asian_width
 from lib import *
 from read_transform_data import read_and_transform
 from simulate_clients import simultedClients
@@ -58,7 +55,6 @@ for client, X_train in enumerate(X_train_l):
                 plot.set(xlim=(x_min,x_max))
                 idx_feature += 1 
     fig.suptitle(f'Feature Distribution of client {int(client)} out of {int(n_clients)}')# {binary_or_multiclass}')
-    #plt.show()
     plt.savefig(plots_path+'client_'+str(int(client))+'_balanced_Age'+str(int(n_clients))+str(binary_or_multiclass))
 
 

@@ -1,5 +1,3 @@
-from pydoc import cli
-from unicodedata import east_asian_width
 from lib import *
 from read_transform_data import read_and_transform
 
@@ -98,6 +96,7 @@ class simultedClients():
             for i in range(0, 60, _step_size):
                 print(f'Client with PSYTE from {i} to {i+_step_size}')
                 y = _data_v2[(_data_v2.PSYTE_Segment >= i) & (_data_v2.PSYTE_Segment < i+_step_size)]
+                y = y.sample(frac=1)
                 self.clients_data.append(y)     
         elif (self.split_type == 'uniform') & (self.split_feature == 'geo'):
             self.clients_data = np.array_split(self.data.sample(frac=1), self.n_clients)
@@ -117,14 +116,19 @@ class simultedClients():
         print(f'Number of {np.size(self.clients_data)} clients. ')
         return self.clients_data
 
-    def createBalancedClients(self, algo='downsampling'):
+    def createBalancedClients(self, algo='downsampling', balance_test_data=True):
+        '''
+        Create the balanced dataset using the algorithm specied in algo parameters
+        algo: 
+        Outputs: X_train, X_test, y_train, y_test
+        '''
         X_train = []
         X_test = []
         y_train = []
         y_test = []
         self.clients_data = self.createClients()
         print(f'Shape of clients data {np.shape(self.clients_data)}. ')
-        #print(self.clients_data[0])
+
         for i, client_data in enumerate(self.clients_data):
             print(f'client {i} with shape {np.shape(client_data)}')
             if np.shape(client_data)[0] > 100:
@@ -138,7 +142,9 @@ class simultedClients():
 
                 # balance data
                 _X_train, _y_train = data_balance(_X_train, _y_train, algo='downsampling')
-                _X_test, _y_test = data_balance(_X_test, _y_test, algo='downsampling')
+                if balance_test_data:
+                    print('Balance testing data')
+                    _X_test, _y_test = data_balance(_X_test, _y_test, algo='downsampling')
                 
                 X_train.append(_X_train)
                 X_test.append(_X_test)
@@ -146,7 +152,3 @@ class simultedClients():
                 y_test.append(_y_test)
         return  X_train, X_test, y_train, y_test
 
-
-#data = read_and_transform()
-#test_client = simultedClients(data=data, n_clients=30)
-#X_train_l, X_test_l, y_train_l, y_test_l = test_client.createBalancedClients(algo='downsampling')

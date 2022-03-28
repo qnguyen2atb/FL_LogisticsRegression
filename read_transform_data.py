@@ -27,9 +27,13 @@ def read_and_transform(binary_or_multiclass='multiclass'):
     selected_df['Churn_risk'] = selected_df.Churn_risk.astype("category").cat.codes
 
     # Data normalization
-    #X = normalize(X, norm='l2', axis=1, copy=True, return_norm=False)
-    #print(X)
+    X_data = selected_df.drop(columns=['PSYTE_Segment','Churn_risk'])
+    X_target = selected_df[['PSYTE_Segment','Churn_risk']]
+    print(X_target)
 
-    selected_df = selected_df.dropna()
+    X_data_b = pd.DataFrame(normalize(X_data, norm='l2', axis=1, copy=True, return_norm=False),columns=X_data.columns)
+    print(X_data_b)
+    X = pd.concat([X_data_b, X_target], axis=1)
+    X = X.dropna()
 
-    return selected_df
+    return X

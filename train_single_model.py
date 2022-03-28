@@ -37,7 +37,7 @@ def train_single_model(file_name):
     #for rat in range(100,1,-1):
     #data_s = data.sample(frac=0.01)
     #data_r = data_s.sample(frac=rat/100.)
-    client_data = client_data.sample(frac=1)
+    client_data = client_data.sample(frac=0.00011)
     X = client_data.drop(columns=['Churn_risk','PSYTE_Segment'])
     y = client_data['Churn_risk']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42) 
@@ -69,11 +69,11 @@ def train_single_model(file_name):
 
     LR = LogisticRegression()
     LRparam_grid = {
-    'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
     'tol': [1e-6, 1e-5, 1e-4, 1e-2, 1e-1, 1],
-    'penalty': ['l1', 'l2'],
-    'max_iter': list(range(100,800,100)),
-    'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
+    'penalty': ['l2'],
+    #'max_iter': list(range(100,800,100)),
+    'solver': ['newton-cg', 'lbfgs', 'liblinear'] #'sag', 'saga'
     }
 
     clf = GridSearchCV(LR, param_grid=LRparam_grid, refit = True, verbose = 3, cv=10, scoring='f1')

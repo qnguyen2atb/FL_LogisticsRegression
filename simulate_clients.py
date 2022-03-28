@@ -30,8 +30,6 @@ def data_balance(_X_train, _y_train, algo='downsampling'):
 
             # checking counts
             print('Labels counts after balancing.')
-            print(downsampled.Churn_risk.value_counts())
-
             _X_train = downsampled.drop('Churn_risk', axis=1)
             _y_train = downsampled.Churn_risk
         elif algo == 'SMOTE':
@@ -47,7 +45,6 @@ def data_balance(_X_train, _y_train, algo='downsampling'):
         X = pd.concat([_X_train, _y_train], axis=1)
         low = X[X.Churn_risk==1]
         high = X[X.Churn_risk==0]
-
 
         X.Churn_risk.value_counts()
         

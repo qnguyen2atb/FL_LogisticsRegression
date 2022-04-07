@@ -10,10 +10,6 @@ This is a prototype of a simple federated learning system using logistic regress
 ## Class & Functions
 ```
 main_FL.py 
-    - model
-    - dd
-    - test
-        - gis
 modelling.py
     - LR_ScikitModel()
         - fit()

@@ -1,7 +1,7 @@
 # FL_LogisticsRegression
 
 
-To run the pipeline:  python main_FL.py 
+To run the pipeline:  python3 main_FL.py 
 
 
 ## Overview
@@ -9,11 +9,23 @@ This is a prototype of a simple federated learning system using logistic regress
 
 ## Class & Functions
 ```
-main 
+main_FL.py 
     - model
     - dd
     - test
         - gis
+modelling.py
+    - LR_ScikitModel()
+        - fit()
+        - coefficient_error()
+        - plot_dist()
+        - multiclass_LogisticFunction()
+plotting.py
+read_transform_data.py
+simulate_clients.py
+    - simultedClients()
+        - createClients()
+        - createBalancedClients()
 ```
 
 ## Data source

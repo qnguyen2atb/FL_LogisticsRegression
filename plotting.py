@@ -4,13 +4,21 @@ from lib import *
 def plot_f1(f1_local, f1_preunlearn_final,  f1_global=None, plot_l= [], figname='default'):
     
 
-    print('QUANG test', plot_l)
     local_T = list(f1_local.T)
     preunlearn_T = list(f1_preunlearn_final.T)
     fig, (ax1) = plt.subplots(1, 1, figsize=(8,8))
     X = np.arange(6)
     color_l = ['b','g', 'y','r','c', 'm', 'k', 'black','purple', 'pink', 'olive', 'gray', 'orange', 'lime'] 
     #ax1.scatter(range(np.shape(local_T)[0]),  global_T, alpha=0.9,  color='blue', label='Unlearned Global Model')
+
+    for i in range(np.shape(local_T)[0]):
+        if f1_global[i] > local_T[i]:
+            global_T = list(f1_global.T)
+            ax1.scatter(i,  global_T[i], alpha=0.9,  color='blue')
+        else: 
+            ax1.scatter(i, local_T[i], alpha=0.9, color='red')    
+     
+    '''
     if 'global' in plot_l:
         if f1_global is not None:
             global_T = list(f1_global.T)
@@ -19,10 +27,10 @@ def plot_f1(f1_local, f1_preunlearn_final,  f1_global=None, plot_l= [], figname=
         ax1.scatter(range(np.shape(local_T)[0]), local_T, alpha=0.9, color='red', label='Local Models')
     if 'preunlearn' in plot_l:
         ax1.scatter(range(np.shape(local_T)[0]), preunlearn_T, alpha=0.9, color='green', label='Pre-Unlearned Global Model')
-
+    '''
     ax1.set_xlabel('Clients #',fontsize=16)
     ax1.set_ylabel('F1 Score (%)',fontsize=16)
-    ax1.legend(fontsize=16)
+    ax1.legend(['Unlearned Global Model', 'Local Models'], fontsize=16)
     ax1.set_ylim([60, 90])
     plt.title(figname)
     plt.xticks(fontsize=16)
@@ -34,7 +42,32 @@ def plot_f1(f1_local, f1_preunlearn_final,  f1_global=None, plot_l= [], figname=
     else:
         plt.savefig('plots/'+figname)
 
-    
+
+    fig, (ax1) = plt.subplots(1, 1, figsize=(8,8))
+    X = np.arange(6)
+    color_l = ['b','g', 'y','r','c', 'm', 'k', 'black','purple', 'pink', 'olive', 'gray', 'orange', 'lime'] 
+    #ax1.scatter(range(np.shape(local_T)[0]),  global_T, alpha=0.9,  color='blue', label='Unlearned Global Model')
+
+    ax1.scatter(range(np.shape(local_T)[0]), local_T, alpha=0.9, color='red')    
+    ax1.scatter(range(np.shape(local_T)[0]),  preunlearn_T, alpha=0.9,  color='green')
+
+     
+    ax1.set_xlabel('Clients #',fontsize=16)
+    ax1.set_ylabel('F1 Score (%)',fontsize=16)
+    ax1.legend(['Pre-Unlearned Global Model', 'Local Models'], fontsize=16)
+    ax1.set_ylim([60, 95])
+    plt.title(figname)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    #fig.suptitle(figname)# {binary_or_multiclass}')
+   
+    if figname == 'default':
+        plt.savefig('plots/f1_local_vs_preunlearn_score.png')
+    else:
+        plt.savefig('plots/local_vs_preunlearn_'+figname)
+
+
+
 def plot_improve(f1_local, f1_preunlearn_final,  f1_global=None, plot_l= [], figname='default'):
     
     print('COMPARISION', f1_global - f1_local)
@@ -44,14 +77,25 @@ def plot_improve(f1_local, f1_preunlearn_final,  f1_global=None, plot_l= [], fig
     X = np.arange(6)
     color_l = ['b','g', 'y','r','c', 'm', 'k', 'black','purple', 'pink', 'olive', 'gray', 'orange', 'lime'] 
     #ax1.scatter(range(np.shape(local_T)[0]),  global_T, alpha=0.9,  color='blue', label='Unlearned Global Model')
-    if 'global' in plot_l:
-        if f1_global is not None:
-            global_T = list(f1_global.T)
-            ax1.scatter(range(np.shape(local_T)[0]),  global_T, alpha=0.9,  color='blue', label='Unlearned Global Model')
-    if 'local' in plot_l: 
-        ax1.scatter(range(np.shape(local_T)[0]), local_T, alpha=0.9, color='red', label='Local Models')
-    if 'preunlearn' in plot_l:
-        ax1.scatter(range(np.shape(local_T)[0]), preunlearn_T, alpha=0.9, color='green', label='Pre-Unlearned Global Model')
+    for i in range(np.shape(local_T)[0]):
+        if global_T[i] > local_T[i]:
+            if f1_global is not None:
+                global_T = list(f1_global.T)
+                ax1.scatter(i,  global_T[i], alpha=0.9,  color='blue', label='Unlearned Global Model')
+        else: 
+            ax1.scatter(i, local_T[i], alpha=0.9, color='red', label='Local Models')
+       
+        '''
+        if 'global' in plot_l:
+            if f1_global is not None:
+                global_T = list(f1_global.T)
+                ax1.scatter(range(np.shape(local_T)[0]),  global_T, alpha=0.9,  color='blue', label='Unlearned Global Model')
+        if 'local' in plot_l: 
+            ax1.scatter(range(np.shape(local_T)[0]), local_T, alpha=0.9, color='red', label='Local Models')
+        if 'preunlearn' in plot_l:
+            ax1.scatter(range(np.shape(local_T)[0]), preunlearn_T, alpha=0.9, color='green', label='Pre-Unlearned Global Model')
+        '''
+
 
     ax1.set_xlabel('Clients #',fontsize=16)
     ax1.set_ylabel('F1 Score (%)',fontsize=16)

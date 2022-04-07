@@ -15,9 +15,9 @@ class LR_ScikitModel():
         LRparam_grid = {
         'C': [0.0001, 0.001, 0.01, 0.1, 1, 10], #, 1, 10, 100
         'tol': [1e-7, 1e-6, 1e-5, 1e-4,1e-3, 1e-2],
-        #'penalty': ['l1', 'l2'],
-        'max_iter': list(range(200,1200,200)),
-        'solver': ['newton-cg', 'lbfgs',  'liblinear'],#, 'sag', 'saga',], #'sag', 'saga', 'lbfgs',
+        'penalty': ['l1', 'l2'],
+        'max_iter': list(range(200,1200,100)),
+        'solver': ['newton-cg', 'lbfgs',  'liblinear','sag', 'saga'],#, 'sag', 'saga',], #'sag', 'saga', 'lbfgs',
         }
 
         LR_search = GridSearchCV(LR, param_grid=LRparam_grid, refit = True, verbose = 3, cv=10, scoring='f1', n_jobs=-1)

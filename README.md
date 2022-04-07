@@ -7,6 +7,14 @@ To run the pipeline:  python main_FL.py
 ## Overview
 This is a prototype of a simple federated learning system using logistic regression as the main ML model at clients and server sides. Aggregation is done with weighted averaging. This contains 3 parts:
 
+## Class & Functions
+main 
+    - model
+    - dd
+    - test
+        - gis
+
+
 ## Data source
 ETL data from the ATB hackathon: select the relevant features
 

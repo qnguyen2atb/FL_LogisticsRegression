@@ -1,8 +1,12 @@
 from lib import *
+#from plot_feature_dist import plot_feature_dist
+
 
 def read_and_transform(binary_or_multiclass='multiclass'):
     '''
-    Read and Transform data'''
+    Read and Transform data
+    Normalize to unity
+    '''
 
 
     print("---Reading input file to pandas Dataframe---")
@@ -27,9 +31,12 @@ def read_and_transform(binary_or_multiclass='multiclass'):
     selected_df['Churn_risk'] = selected_df.Churn_risk.astype("category").cat.codes
 
     # Data normalization
-    #X = normalize(X, norm='l2', axis=1, copy=True, return_norm=False)
-    #print(X)
+    X_data = selected_df.drop(columns=['PSYTE_Segment','Churn_risk'])
+    X_target = selected_df[['PSYTE_Segment','Churn_risk']]
+    X_data_b = pd.DataFrame(normalize(X_data, norm='l2', axis=1, copy=True, return_norm=False),columns=X_data.columns)
+    X = pd.concat([X_data_b, X_target], axis=1)
+    X = X.dropna()
 
-    selected_df = selected_df.dropna()
+    #plot_feature_dist(X, y=None, figname='default')
 
-    return selected_df
+    return X

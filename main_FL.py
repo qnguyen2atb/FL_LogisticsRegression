@@ -1,3 +1,4 @@
+from sympy import re
 from lib import *
 
 
@@ -8,23 +9,8 @@ from modelling import LR_ScikitModel, multiclass_LogisticFunction
 from plotting import plot_f1, plot_hist, plot_comparision, plot_coef_dist
 
 
-def main():
-    '''
-    This main class will execute the federated learning pipeline, this main class will:  \
-    - Read and transform the the simulated churn risk data from ATB
-    - Optional: Train a big model for all data 
-    - Simulating clients based on geographical locations of the banks
-    - Optional: Retrain the local models OR load the pre-trained models
-    - Aggregate the local models at the simulated aggregation server
-    - Test the global model on clients' local testing data
-    Input: churnsimulateddata.csv
-    '''
-
-    print("---Read & Transform Data---")    
-    data = read_and_transform(binary_or_multiclass='binary')
-
-    trainbig=False
-    if trainbig:
+def train_big_model(train_big=False):
+    if train_big:
         print('---Training a big model---') 
         #split data
         data = data.sample(frac=1)
@@ -42,13 +28,12 @@ def main():
         output =  model.fit()
         pprint.pprint(output)
         print('F1 score of the big fat model: ', output['f1-score'])
+        return output
 
-    print('---Simulate clients based on geographical locations of the banks---') 
-    test_client = simultedClients(data=data, split_feature= 'geo', n_clients=60)
-    X_train, X_test, y_train, y_test = test_client.createBalancedClients(algo='downsampling', balance_test_data=False)
+
+def train_local(X_train, X_test, y_train, y_test, retrain=True):
 
     print('---Retrain the local models or load the pre-trained models---')  
-    retrain=True
     if retrain==True:
         print('---Training local models at local clients---')
         intercept_l = []
@@ -94,14 +79,9 @@ def main():
             coef_l = np.load(f)
         with open('output/fitting_intercept.npy', 'rb') as f:
             intercept_l = np.load(f)
+    return f1_l, error_l, coef_l, intercept_l
 
-    print('---Aggregating at the aggregation server---')
-    #averaged the local weights & biases
-    global_intercept = np.mean(intercept_l,axis=0)
-    global_coef = np.mean(coef_l,axis=0)
-    print('GLOBAL intercept and coefficient: \n', global_intercept, global_coef)
-
- 
+def test_global_model(X_test, y_test, global_coef, global_intercept, f1_local):
     print('---Testing global model on local testing data---')
     f1_l_global = []
     for i in range(np.shape(X_test)[0]):
@@ -113,13 +93,45 @@ def main():
     f1_l_final_global = []
     # Replace local model with global model if global model is better
     for i, _f1  in enumerate(f1_l_global):
-        if f1_l[i] < f1_l_global[i]:
+        if f1_local[i] < f1_l_global[i]:
             f1_l_final_global.append(f1_l_global[i])  
         else:
-            f1_l_final_global.append(f1_l[i]) 
+            f1_l_final_global.append(f1_local[i]) 
 
-    plot_comparision(f1_l_final_global, f1_l)
+    plot_comparision(f1_l_final_global, f1_local)
 
+
+def main():
+    
+    '''
+    This main class will execute the federated learning pipeline, this main class will:  
+    - Read and transform the the simulated churn risk data from ATB
+    - Optional: Train a big model for all data 
+    - Simulating clients based on geographical locations of the banks
+    - Optional: Retrain the local models OR load the pre-trained models
+    - Aggregate the local models at the simulated aggregation server
+    - Test the global model on clients' local testing data
+    Input: churnsimulateddata.csv
+    '''
+
+    print("---Read & Transform Data---")    
+    data = read_and_transform(binary_or_multiclass='binary')
+    output_bigmodel = train_big_model(train_big=False)
+
+    print('---Simulate clients based on geographical locations of the banks---') 
+    test_client = simultedClients(data=data, split_feature= 'geo', n_clients=60)
+    X_train, X_test, y_train, y_test = test_client.createBalancedClients(algo='downsampling', balance_test_data=False)
+
+    print('---Train local models---')
+    f1_local, error_l, coef_l, intercept_l = train_local(X_train, X_test, y_train, y_test, retrain=False)
+
+    print('---Aggregating at the aggregation server---')
+    #averaged the local weights & biases
+    global_intercept = np.mean(intercept_l,axis=0)
+    global_coef = np.mean(coef_l,axis=0)
+    print('GLOBAL intercept and coefficient: \n', global_intercept, global_coef)
+
+    test_global_model(X_test, y_test, global_coef, global_intercept, f1_local)    
 
 if __name__ == "__main__":
     main()

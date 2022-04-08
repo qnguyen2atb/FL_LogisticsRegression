@@ -10,6 +10,5 @@ from sklearn.preprocessing import LabelEncoder, normalize
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix
 
-
 import seaborn as sns
 import pprint

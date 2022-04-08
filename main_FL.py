@@ -9,14 +9,23 @@ from plotting import plot_f1, plot_hist, plot_comparision, plot_coef_dist
 
 
 def main():
-    print("---EXECUTING THE MAIN PIPELINE---")
-    print("---Read & Transform Data---")
-    
+    '''
+    This main class will execute the federated learning pipeline, this main class will:  \
+    - Read and transform the the simulated churn risk data from ATB
+    - Optional: Train a big model for all data 
+    - Simulating clients based on geographical locations of the banks
+    - Optional: Retrain the local models OR load the pre-trained models
+    - Aggregate the local models at the simulated aggregation server
+    - Test the global model on clients' local testing data
+    Input: churnsimulateddata.csv
+    '''
+
+    print("---Read & Transform Data---")    
     data = read_and_transform(binary_or_multiclass='binary')
 
     trainbig=False
     if trainbig:
-        print('---Training a big model for all---') 
+        print('---Training a big model---') 
         #split data
         data = data.sample(frac=1)
         X = data.drop(columns=['Churn_risk'])
@@ -34,10 +43,11 @@ def main():
         pprint.pprint(output)
         print('F1 score of the big fat model: ', output['f1-score'])
 
-    print('---Simulating clients based on geographical locations of the banks---') 
+    print('---Simulate clients based on geographical locations of the banks---') 
     test_client = simultedClients(data=data, split_feature= 'geo', n_clients=60)
     X_train, X_test, y_train, y_test = test_client.createBalancedClients(algo='downsampling', balance_test_data=False)
-    
+
+    print('---Retrain the local models or load the pre-trained models---')  
     retrain=True
     if retrain==True:
         print('---Training local models at local clients---')

@@ -117,13 +117,12 @@ def test_global_model(X_test, y_test, global_coef, global_intercept, f1_local):
 
 
 def main():
-    
     '''
     This main class will execute the federated learning pipeline, this main class will:  
     - Read and transform the the simulated churn risk data from ATB
-    - Optional: Train a big model for all data 
+    - (Optional): Train a big model for all data 
     - Simulating clients based on geographical locations of the banks
-    - Optional: Retrain the local models OR load the pre-trained models
+    - (Optional): Retrain the local models OR load the pre-trained models
     - Aggregate the local models at the simulated aggregation server
     - Test the global model on clients' local testing data
     Input: churnsimulateddata.csv

@@ -1,6 +1,4 @@
 from lib import *
-#from plot_feature_dist import plot_feature_dist
-
 
 def read_and_transform(binary_or_multiclass='multiclass'):
     '''
@@ -36,7 +34,5 @@ def read_and_transform(binary_or_multiclass='multiclass'):
     X_data_b = pd.DataFrame(normalize(X_data, norm='l2', axis=1, copy=True, return_norm=False),columns=X_data.columns)
     X = pd.concat([X_data_b, X_target], axis=1)
     X = X.dropna()
-
-    #plot_feature_dist(X, y=None, figname='default')
 
     return X

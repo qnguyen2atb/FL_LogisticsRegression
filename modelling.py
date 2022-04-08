@@ -13,11 +13,11 @@ class LR_ScikitModel():
         starttime = timeit.default_timer()
         LR = LogisticRegression()
         LRparam_grid = {
-        #'C': [0.0001, 0.001, 0.01, 0.1, 1, 10], #, 1, 10, 100
-        #'tol': [1e-7, 1e-6, 1e-5, 1e-4,1e-3, 1e-2],
-        #'penalty': ['l1', 'l2'],
-        #'max_iter': list(range(200,1200,200)),
-        'solver': ['newton-cg']#, 'lbfgs',  'liblinear'],#, 'sag', 'saga',], #'sag', 'saga', 'lbfgs',
+        'C': [0.0001, 0.001, 0.01, 0.1, 1, 10], #, 1, 10, 100
+        'tol': [1e-7, 1e-6, 1e-5, 1e-4,1e-3, 1e-2],
+        'penalty': ['l1', 'l2'],
+        'max_iter': list(range(200,1200,200)),
+        'solver': ['newton-cg', 'lbfgs',  'liblinear', 'sag', 'saga',], 
         }
 
         LR_search = GridSearchCV(LR, param_grid=LRparam_grid, refit = True, verbose = 3, cv=10, scoring='f1', n_jobs=-1)
@@ -35,20 +35,14 @@ class LR_ScikitModel():
 
         self.predict_proba = clf.predict_proba(self.X_test) 
         model_params = clf.get_params() 
-        #best_param = {'C': 0.01, 'penalty': 'l2', 'solver': 'liblinear', 'tol': 1e-06}
-        #clf = LogisticRegression(**best_param)
-        
+    
         training_time = timeit.default_timer() - starttime
-        #starttime = timeit.default_timer()
         y_pred=clf.predict(self.X_test)
         f1 = round(np.mean(f1_score(self.y_test, y_pred, labels=0, average='binary'))*100, 2)
         f1_ave = round(f1_score(self.y_test, y_pred, average='weighted')*100, 2)
         accuracy = round(accuracy_score(self.y_test, y_pred)*100,2)
         report = classification_report(self.y_test, y_pred, zero_division=0)
-        confusion = confusion_matrix(self.y_test, y_pred)
-        #print("The training time is :", training_time)
-        #testing_time = timeit.default_timer() - starttime
-        #print("The testing time is :", testing_time)   
+        confusion = confusion_matrix(self.y_test, y_pred)  
         self.coeff = clf.coef_
         self.intercept = clf.intercept_
 
@@ -147,8 +141,6 @@ def multiclass_LogisticFunction(X, W, b):
     def predict_(X, W, b):
 
         assert np.shape(X)[1] == np.shape(W)[1]   
-        #assert np.shape(W)[0] == np.shape(b)[0]   
-
         pre_vals = np.dot(X, W.T) + b
         if np.size(b) > 2:            
             return softmax(pre_vals)

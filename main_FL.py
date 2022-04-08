@@ -69,23 +69,23 @@ def train_local(X_train, X_test, y_train, y_test, retrain=False):
             error = output['err_coefficients']
             error_l.append(error)
         
-        with open('output/f1_parameters.npy', 'wb') as f:
+        with open('output_models/f1_parameters.npy', 'wb') as f:
             np.save(f, f1_l)
-        with open('output/fitting_coef_err.npy', 'wb') as f:
+        with open('output_models/fitting_coef_err.npy', 'wb') as f:
             np.save(f, error_l)
-        with open('output/fitting_coef.npy', 'wb') as f:
+        with open('output_models/fitting_coef.npy', 'wb') as f:
             np.save(f, coef_l)
-        with open('output/fitting_intercept.npy', 'wb') as f:
+        with open('output_models/fitting_intercept.npy', 'wb') as f:
             np.save(f, intercept_l)
 
     else:
-        with open('output/f1_parameters.npy', 'rb') as f:
+        with open('output_models/f1_parameters.npy', 'rb') as f:
             f1_l = np.load(f)
-        with open('output/fitting_coef_err.npy', 'rb') as f:
+        with open('output_models/fitting_coef_err.npy', 'rb') as f:
             error_l = np.load(f)
-        with open('output/fitting_coef.npy', 'rb') as f:
+        with open('output_models/fitting_coef.npy', 'rb') as f:
             coef_l = np.load(f)
-        with open('output/fitting_intercept.npy', 'rb') as f:
+        with open('output_models/fitting_intercept.npy', 'rb') as f:
             intercept_l = np.load(f)
     return f1_l, error_l, coef_l, intercept_l
 

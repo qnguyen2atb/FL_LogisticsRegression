@@ -1,7 +1,14 @@
 from lib import *
 
 class LR_ScikitModel():
-    
+    '''
+    A customezed class of Logistic Function based on Scikit-learn
+    Inputs: X_train, X_test, y_train, y_test, figname_prefix='default'
+    Functions:
+        - fit: Fit the model
+        - coefficient_error: Calculate coefficient errors 
+        - plot_dist: Plot feature distributions  
+    '''
     
     def __init__(self, X_train, X_test, y_train, y_test, figname_prefix='default'):
         self.name = 'LR'
@@ -70,8 +77,13 @@ class LR_ScikitModel():
         return output
 
     def coefficient_error(self): 
+        '''
+        Calculate the error of the coefficients of the fit to the Logit function 
+        https://web.stanford.edu/class/archive/stats/stats200/stats200.1172/Lecture26.pdf
+        Return: coefficient error
+        To be implemented: intercept error
+        '''
 
-        '''https://web.stanford.edu/class/archive/stats/stats200/stats200.1172/Lecture26.pdf'''    
         #c = np.exp(np.tensordot(self.X_test,self.coeff.T, axes=(1))) / (1+np.exp(np.tensordot(self.X_test,self.coeff.T, axes=(1)))**2)
         d = np.exp(np.tensordot(self.X_test,self.coeff.T, axes=(1))) / (1+np.exp(np.tensordot(self.X_test,self.coeff.T, axes=(1)))**2)
         e = np.diag(d.flatten())
@@ -84,6 +96,11 @@ class LR_ScikitModel():
         return self.coeff_error
 
     def plot_dist(self, X, y, figname='default'):
+        '''
+        Plot the distribution of the data
+        Output: feature distribution plots in plots folder
+        '''
+        
         plots_path = './plots/'
         #sns.set_palette("hls")
         sns.set(rc={'figure.figsize':(16,9)})
@@ -123,6 +140,11 @@ def multiclass_LogisticFunction(X, W, b):
         W: Weight or logistics coefficient matrix with size (n_classes, n_features)
         b: bias or intercept vector with size (n_classes)  
         ref: https://github.com/bamtak/machine-learning-implemetation-python/blob/master/Multi%20Class%20Logistic%20Regression.ipynb
+    Functions:
+        - softmax
+        - sigmoid_function
+        - sigmoid
+        - predict
     '''
 
     def softmax(z):

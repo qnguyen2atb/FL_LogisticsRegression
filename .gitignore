@@ -1,5 +1,9 @@
 plots/*
 output_models/*
+__pycache__
+.ipynb_checkpoints/*
+.DS_Store
+
 
 !plots/.gitkeep 
 !output_models/.gitkeep
